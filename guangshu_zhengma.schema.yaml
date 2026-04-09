@@ -1,0 +1,109 @@
+# Rime schema settings
+# encoding: utf-8
+
+schema:
+    schema_id: guangshu_zhengma
+    name: 广书郑码
+    version: "1.0"
+    author:
+        - 發明人 郑易里教授
+    description: |
+        郑码
+        碼表源自 ibus-table-zhengma
+        敲 ` 鍵進入拼音反查
+    dependencies:
+        - guangshu_zhuyin
+
+switches:
+    - name: ascii_mode
+      reset: 0
+      states: [ 中文, 西文 ]
+    - name: full_shape
+      states: [ 半角, 全角 ]
+    - options: [ zh_jt, zh_trad, no_change ]
+      states: [ 简化汉字, 傳統漢字, 无转换 ]
+      reset: 0
+    - name: ascii_punct
+      states: [ 。，, ．， ]
+
+engine:
+    processors:
+        - ascii_composer
+        - recognizer
+        - key_binder
+        - speller
+        - punctuator
+        - selector
+        - navigator
+        - express_editor
+        - chord_composer
+    segmentors:
+        - ascii_segmentor
+        - matcher
+        - abc_segmentor
+        - punct_segmentor
+        - fallback_segmentor
+    translators:
+        - punct_translator
+        - table_translator
+        - reverse_lookup_translator
+    filters:
+        - simplifier@tradition
+        - simplifier
+        - uniquifier
+
+speller:
+    alphabet: 'zvklugpjsroedhaintxwfcmybqZVKLUGPJSROEDHAINTXWFCMYBQ'
+    delimiter: " '"
+    max_code_length: 5
+    auto_select: true
+    auto_select_unique_candidate: true
+
+chord_composer:
+    algebra:
+        - xlit|sroed|aaaaa|
+
+translator:
+    dictionary: guangshu_zhengma
+    enable_user_dict: false
+    max_phrase_length: 5
+    preedit_format:
+        - "xlit|zvklugpjsroedhaintxwfcmybq|冰大川竹人乡米七二乙寸言卜之一曲儿口斤三又十梄目添月|"
+    comment_format:
+        - "xlit|zvklugpjsroedhaintxwfcmybq~|冰大川竹人乡米七二乙寸言卜之一曲儿口斤三又十梄目添月～|"
+
+reverse_lookup:
+    dictionary: luna_pinyin
+    prefix: "`"
+    tips: 〔拼音〕
+
+simplifier:
+    tips: all
+    option_name: zh_jt
+
+tradition:
+    opencc_config: s2t.json
+    option_name: zh_trad
+
+punctuator:
+    import_preset: custom_symbols
+
+key_binder:
+    import_preset: default
+    bindings:
+        - { when: paging, accept: comma, send: comma }
+        - { when: has_menu, accept: period, send: period }
+        - { when: always, accept: KP_Add, send: "B" }
+        - { when: always, accept: KP_Subtract, send: "D" }
+        - { when: always, accept: KP_Multiply, send: "G" }
+        - { when: always, accept: KP_Divide, send: "H" }
+        - { when: always, accept: Shift+KP_Add, send: "I" }
+editor:
+  bindings:
+    Escape: commit_script_text
+
+recognizer:
+    import_preset: default
+    patterns:
+        reverse_lookup: "`[a-zA-Z]*$"
+        punct: '^\^([0-9]0?|[A-Za-z]+)$'

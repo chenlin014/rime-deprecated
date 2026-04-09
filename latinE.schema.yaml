@@ -1,0 +1,55 @@
+# Rime schema settings
+# encoding: utf-8
+
+schema:
+    schema_id: latinE
+    name: LatinE
+    version: "0.1"
+    author:
+        - "Chenlin (陈林)"
+
+switches:
+    - name: ascii_mode
+      reset: 0
+      states: [ Plain, Accented ]
+      
+engine:
+    processors:
+        - ascii_composer
+        - recognizer
+        - key_binder
+        - speller
+        - selector
+        - navigator
+        - express_editor
+    segmentors:
+        - ascii_segmentor
+        - matcher
+        - abc_segmentor
+        - fallback_segmentor
+    translators:
+        - table_translator
+    filters:
+        - uniquifier
+
+speller:
+    alphabet: "zvklugpjsroedhaintxwfcmybqZVKLUGPJSROEDHAINTXWFCMYBQ?',."
+    max_code_length: 100
+    auto_select: true
+    auto_select_unique_candidate: true
+
+translator:
+    dictionary: latinE
+    enable_user_dict: false
+    enable_sentence: true
+    sentence_over_completion: true
+    enable_encoder: true
+    preedit_format:
+        - "xlit|sroedhaintvklugpcm|~Ơ\\/-?^·ÖƷcovu,rj*|"
+        - "xlit|SROEDHAINTVKLUGPCM|~Ơ\\/-?^·ÖƷCOVU,RJ*|"
+
+key_binder:
+    import_preset: default
+
+recognizer:
+    import_preset: default
